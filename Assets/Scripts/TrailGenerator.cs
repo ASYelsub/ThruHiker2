@@ -92,12 +92,13 @@ public class TrailGenerator : MonoBehaviour
 
         int counter = 0;
         float altitudeTrack = 0f;
+        float slope = 0;
         for (int i = -1; i <= trailDistance; i++)
         {
             if (i != -1 && i != trailDistance)
             {
                 //ideally at some point this would be set through a derivative... but idk how to code that.
-                // slope = Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)) - Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i - 1, 0, (float)trailDistance, 0, 1f));
+                slope = Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)) - Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i - 1, 0, (float)trailDistance, 0, 1f));
 
                 altitudeTrack = Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)) * _slotHeightSpaceModifier * altInc;
                 // Debug.Log(level.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)));
@@ -117,7 +118,7 @@ public class TrailGenerator : MonoBehaviour
                 if (j != -1 && j != trailWidth && i != -1 && i != trailDistance)
                 {
                     spaceSlot = Instantiate(_spaceSlotPrefab, new Vector3((j * _spaceSlotPadding) + gameObject.transform.position.x, gameObject.transform.position.y + altitudeTrack, (i * _spaceSlotPadding) + gameObject.transform.position.z), Quaternion.identity).GetComponent<SpaceSlot>();
-                    // spaceSlot.Init(slope);
+                    spaceSlot.Init(slope);
                     spaceSlot.name = "node (" + counter + ")";
                     grid[i, j] = spaceSlot;
                     spaceSlot.point = new Vector2Int(i, j);

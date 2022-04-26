@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4debfe82b0c94800be5ceb4444648cf, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  levelNumber: 1
+  levelName: Level 1
+  startTrailSpot: {fileID: 11400000, guid: 62bca65d55daf4f48b7f962dddc718f2, type: 2}
+  endTrailSpot: {fileID: 11400000, guid: 5d67cdc97f1464ddbac71201b0682072, type: 2}
+  levelDistance: 0
+  altitudeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.33965832
+      value: 0.49670297
+      inSlope: -1.3410581
+      outSlope: -1.3410581
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.21437733
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  trailDistance: 0
+  trailWidth: 0

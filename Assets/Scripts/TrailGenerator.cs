@@ -32,6 +32,7 @@ public class TrailGenerator : MonoBehaviour
     private List<SpaceSlot> trailList = new List<SpaceSlot>();
     private List<SpaceSlot> gridBorderList = new List<SpaceSlot>();
     [HideInInspector] public LinkedList<SpaceSlot> trail = new LinkedList<SpaceSlot>();
+    [HideInInspector] public LinkedList<SpaceSlot> trailOther = new LinkedList<SpaceSlot>();
 
     [HideInInspector] public List<GameObject> treeBatch = new List<GameObject>();
     [HideInInspector] public List<GameObject> rockBatch = new List<GameObject>();
@@ -98,7 +99,9 @@ public class TrailGenerator : MonoBehaviour
             if (i != -1 && i != trailDistance)
             {
                 //ideally at some point this would be set through a derivative... but idk how to code that.
-                slope = Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)) - Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i - 1, 0, (float)trailDistance, 0, 1f));
+                slope =
+                (Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i + 1, 0, (float)trailDistance, 0, 1f))
+                - Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i - 1, 0, (float)trailDistance, 0, 1f))) / ((i + 1) - (i - 1));
 
                 altitudeTrack = Services.Game.currentLevel.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)) * _slotHeightSpaceModifier * altInc;
                 // Debug.Log(level.altitudeCurve.Evaluate(ExtensionMethods.Remap(i, 0, (float)trailDistance, 0, 1f)));
@@ -140,6 +143,7 @@ public class TrailGenerator : MonoBehaviour
         //Grid done being generated//
 
 
+        //Make first trail
         trailList = GetPathDFS(grid, gridList[startX], gridList[gridList.Count - endX]);
 
         int trailCounter = 0;
@@ -154,9 +158,28 @@ public class TrailGenerator : MonoBehaviour
         }
 
 
+        //Make second trail
+        startX = UnityEngine.Random.Range(0, trailList.Count - 10);
+        endX = UnityEngine.Random.Range(startX, trailList.Count);
+
+        // trailList[startX].isTrail = false;
+        // trailList[endX].isTrail = false;
+
+        List<SpaceSlot> secondTrailList = GetPathDFS(grid, trailList[startX], trailList[endX]);
+
+        foreach (SpaceSlot t in secondTrailList)
+        {
+            t.SetSlotToPath();
+            t.isTrail = true;
+            // notTrailSpots.Remove(t);
+            t.trailInt = trailCounter;
+            trailCounter++;
+            // trailOther.AddLast(t);
+        }
+
         foreach (SpaceSlot s in notTrailSpots)
         {
-            s.SetSlotToPlant();
+
             if (s.plantChance > 1)
             {
                 s.SetSlotToRock();
@@ -164,6 +187,8 @@ public class TrailGenerator : MonoBehaviour
             }
             if (s.plantChance >= 1)
             {
+
+                s.SetSlotToPlant(UnityEngine.Random.Range(.4f, .9f), UnityEngine.Random.Range(0f, 360f));
                 continue;
             }
             else
@@ -175,6 +200,7 @@ public class TrailGenerator : MonoBehaviour
                 }
 
             }
+            s.SetSlotToPlant(1f, UnityEngine.Random.Range(0f, 360f));
 
         }
 
@@ -343,8 +369,12 @@ public class TrailGenerator : MonoBehaviour
     }
 
 
+
+
     bool IsPointNavigable(SpaceSlot[,] indexGrid, Vector2Int point)
     {
+        // if (indexGrid[point.x, point.y].isTrail)
+        //     return false;
         if (IsPointInGrid(point) == false)
             return false;
         if (indexGrid[point.x, point.y].navigableVal == 1)

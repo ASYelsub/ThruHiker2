@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SpaceSlot : MonoBehaviour
 {
+
     //unsure what to do with this other than like it'll interact
     //w the visual part of Unity?
     public List<GameObject> childObjects = new List<GameObject>();
@@ -29,6 +30,8 @@ public class SpaceSlot : MonoBehaviour
     public Transform plantTransform, treeTransform, groundTransform, rockTransform;
     public float plantChance = 0;
     [HideInInspector] public int trailInt;
+    public List<GameObject> treeObjs = new List<GameObject>();
+    public List<GameObject> plantObjs = new List<GameObject>();
     public SpaceSlot(Vector3 firstPointInSpace, Vector3 secondPointInSpace, GameObject slotPrefab, GameObject trailHolder, Material slotMat, float slope)
     {
         this.firstPointInSpace = firstPointInSpace;
@@ -47,6 +50,12 @@ public class SpaceSlot : MonoBehaviour
     {
         this.slope = slope;
         this.firstPointInSpace = gameObject.transform.position;
+        // groundTransform.gameObject.isStatic = false;
+        // Debug.Log("here");
+        // Debug.Log(slope);
+        // groundTransform.Rotate(new Vector3(0, 0, slope));
+
+        // groundTransform.gameObject.isStatic = true;
     }
 
     public void SetSlotToTree()
@@ -57,12 +66,12 @@ public class SpaceSlot : MonoBehaviour
         SetTreeOn();
     }
 
-    public void SetSlotToPlant()
+    public void SetSlotToPlant(float scale, float yRot)
     {
         mySlotType = SlotTypes.Plants;
         SetRockOff();
         SetTreeOff();
-        SetPlantOn();
+        SetPlantOn(new Vector3(scale, scale, scale), yRot);
     }
 
     public void SetSlotToRock()
@@ -160,6 +169,13 @@ public class SpaceSlot : MonoBehaviour
     private void SetTreeOn()
     {
         treeTransform.gameObject.SetActive(true);
+        int treeOn = UnityEngine.Random.Range(0, treeObjs.Count);
+        for (int i = 0; i < treeObjs.Count; i++)
+        {
+            treeObjs[i].SetActive(false);
+            if (i == treeOn)
+                treeObjs[i].SetActive(true);
+        }
     }
     private void SetTreeOff()
     {
@@ -173,9 +189,22 @@ public class SpaceSlot : MonoBehaviour
     {
         rockTransform.gameObject.SetActive(false);
     }
-    private void SetPlantOn()
+    private void SetPlantOn(Vector3 scale, float yRot)
     {
         plantTransform.gameObject.SetActive(true);
+        int plantOn = UnityEngine.Random.Range(0, plantObjs.Count);
+        for (int i = 0; i < plantObjs.Count; i++)
+        {
+            plantObjs[i].SetActive(false);
+            if (i == plantOn)
+            {
+                plantObjs[i].SetActive(true);
+                plantObjs[i].transform.localScale = scale;
+                plantObjs[i].transform.eulerAngles += new Vector3(0, yRot, 0);
+            }
+
+        }
+
     }
     private void SetPlantOff()
     {

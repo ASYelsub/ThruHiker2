@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4debfe82b0c94800be5ceb4444648cf, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
+  hikersInLevel: 6
   levelNumber: 1
   levelName: Level 1
   startTrailSpot: {fileID: 11400000, guid: 62bca65d55daf4f48b7f962dddc718f2, type: 2}
@@ -50,5 +51,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  trailDistance: 0
-  trailWidth: 0
+  trailDistance: 100
+  trailWidth: 30

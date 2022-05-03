@@ -7,6 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Level", menuName = "Scriptables/Level", order = 1)]
 public class Level : ScriptableObject
 {
+    public int hikersInLevel;
     public int levelNumber;
     public string levelName;
     public TrailSpot startTrailSpot, endTrailSpot;

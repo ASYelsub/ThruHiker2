@@ -19,6 +19,7 @@ public class HikersEditor : Editor
 
         // }
         hikerObject.firstName = EditorGUILayout.TextField("First Name", hikerObject.firstName);
+        hikerObject.lastName = EditorGUILayout.TextField("Last Name", hikerObject.lastName);
         for (int i = 0; i < hikerObject.appearanceLevels.Count; i++)
         {
             // EditorGUILayout.LabelField(hikerObject.appearanceLevels[i].ToString());

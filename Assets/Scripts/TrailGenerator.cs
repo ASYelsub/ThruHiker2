@@ -7,48 +7,33 @@ using System.Linq;
 public class TrailGenerator : MonoBehaviour
 {
 
-    public List<Level> levels = new List<Level>();
+    public GameObject trailParent;
+    public SpaceSlot[,] grid;
 
-    [SerializeField] private int trailDistance;
-    [SerializeField] private int trailWidth;
     [SerializeField] private GameObject _spaceSlotPrefab;
-    [SerializeField] private float _spaceSlotPadding;
-
+    [Range(0, 29)][SerializeField] private int startX;
+    [Range(1, 29)][SerializeField] private int endX;
 
     [Range(0f, 1f)][SerializeField] private float _bendyness;
     [Range(0f, 1f)][SerializeField] private float _bendySeparation;
-
-
-    [Range(0, 29)][SerializeField] private int startX;
-
-    [Range(1, 29)][SerializeField] private int endX;
-
-    public SpaceSlot[,] grid;
-    List<SpaceSlot> gridList = new List<SpaceSlot>();
-
-    float _slotHeightSpaceModifier = .5f;
-    List<SpaceSlot> notTrailSpots = new List<SpaceSlot>();
-
+    [SerializeField] private float _spaceSlotPadding;
+    [HideInInspector] public LinkedList<SpaceSlot> trail = new LinkedList<SpaceSlot>();
     private List<SpaceSlot> trailList = new List<SpaceSlot>();
     private List<SpaceSlot> gridBorderList = new List<SpaceSlot>();
-    [HideInInspector] public LinkedList<SpaceSlot> trail = new LinkedList<SpaceSlot>();
-    [HideInInspector] public LinkedList<SpaceSlot> trailOther = new LinkedList<SpaceSlot>();
-
-    [HideInInspector] public List<GameObject> treeBatch = new List<GameObject>();
-    [HideInInspector] public List<GameObject> rockBatch = new List<GameObject>();
-    [HideInInspector] public List<GameObject> nonTrail_slotBatch = new List<GameObject>();
-    [HideInInspector] public List<GameObject> plantBatch = new List<GameObject>();
-
+    List<SpaceSlot> gridList = new List<SpaceSlot>();
+    List<SpaceSlot> notTrailSpots = new List<SpaceSlot>();
+    float _slotHeightSpaceModifier = .5f;
     int firstTrailCount, entireTrailCount;
+    int trailDistance;
+    int trailWidth;
+    float _trailAltitudeModifier = .0002f;
     public void Awake()
     {
         Services.TrailGenerator = this;
     }
 
-
     public void Init()
     {
-        Services.Game.currentLevel = levels[0];
         GenerateTrail(Services.Game.currentLevel);
     }
 
@@ -67,7 +52,6 @@ public class TrailGenerator : MonoBehaviour
             Destroy(s.gameObject);
             Destroy(s);
         }
-        Services.Game.currentLevel = levels[0];
         gridList.Clear();
         notTrailSpots.Clear();
         trailList.Clear();
@@ -82,11 +66,13 @@ public class TrailGenerator : MonoBehaviour
     {
 
         //Grid Generation//
+        trailDistance = (int)level.trailDistance;
+        trailWidth = (int)level.trailWidth;
         grid = new SpaceSlot[trailDistance, trailWidth];
         float startAltitude = level.startTrailSpot.altitutde;
         float endAltitude = level.endTrailSpot.altitutde;
         float totalAlt = endAltitude - startAltitude;
-        float altInc = totalAlt / trailDistance * 10f;
+        float altInc = totalAlt * trailDistance * _trailAltitudeModifier;
 
 
         Vector2 startMapPosition = level.startTrailSpot.mapPosition;
@@ -122,6 +108,7 @@ public class TrailGenerator : MonoBehaviour
                 if (j != -1 && j != trailWidth && i != -1 && i != trailDistance)
                 {
                     spaceSlot = Instantiate(_spaceSlotPrefab, new Vector3((j * _spaceSlotPadding) + gameObject.transform.position.x, gameObject.transform.position.y + altitudeTrack, (i * _spaceSlotPadding) + gameObject.transform.position.z), Quaternion.identity).GetComponent<SpaceSlot>();
+                    spaceSlot.transform.SetParent(trailParent.transform);
                     spaceSlot.Init(slope);
                     spaceSlot.name = "node (" + counter + ")";
                     grid[i, j] = spaceSlot;
@@ -135,6 +122,7 @@ public class TrailGenerator : MonoBehaviour
                 else if (i == -1 || i == trailDistance || j == -1 || j == trailWidth)
                 {
                     spaceSlot = Instantiate(_spaceSlotPrefab, new Vector3((j * _spaceSlotPadding) + gameObject.transform.position.x, gameObject.transform.position.y + altitudeTrack, (i * _spaceSlotPadding) + gameObject.transform.position.z), Quaternion.identity).GetComponent<SpaceSlot>();
+                    spaceSlot.transform.SetParent(trailParent.transform);
                     spaceSlot.point = new Vector2Int(i, j);
                     gridBorderList.Add(spaceSlot);
                     continue;
@@ -354,8 +342,6 @@ public class TrailGenerator : MonoBehaviour
     }
 
 
-
-
     bool IsPointNavigable(SpaceSlot[,] indexGrid, Vector2Int point)
     {
         if (IsPointInGrid(point) == false)
@@ -384,27 +370,6 @@ public class TrailGenerator : MonoBehaviour
     }
 
     ///<BATCH><RELATED>///
-
-    bool[,,] _wallGrid;
-    bool[,,] _nextWallGrid;
-    Vector3[,,] _positions;
-    Vector3[,,] _scales;
-    public int batchIndexMax = 1023;
-
-    List<List<ObjDataGen>> _batches = new List<List<ObjDataGen>>();
-    public Mesh objMesh;
-    public Material objMat;
-    void AddObj(List<ObjDataGen> currBatch, int i, int j, int k)
-    {
-        currBatch.Add(new ObjDataGen(_positions[i, j, k], Vector3.one, Quaternion.identity));
-    }
-    List<ObjDataGen> BuildNewBatch()
-    {
-        return new List<ObjDataGen>();
-    }
-
-
-
 
     public class SearchVertex : IComparable<SearchVertex>
     {
@@ -445,33 +410,7 @@ public class TrailGenerator : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// This class holds the data for each object that will be batched
-    /// </summary>
-    public class ObjDataGen
-    {
-        //location data
-        public Vector3 pos;
-        public Vector3 scale;
-        public Quaternion rot;
 
-        //matrix conversion
-        public Matrix4x4 matrix
-        {
-            get
-            {
-                return Matrix4x4.TRS(pos, rot, scale);
-            }
-        }
-
-        //constructor
-        public ObjDataGen(Vector3 pos, Vector3 scale, Quaternion rot)
-        {
-            this.pos = pos;
-            this.scale = scale;
-            this.rot = rot;
-        }
-    }
 
 
 }

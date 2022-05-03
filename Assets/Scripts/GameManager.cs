@@ -14,7 +14,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [HideInInspector] public Level currentLevel;
-
+    public List<Level> levels = new List<Level>();
     public void Awake()
     {
         Services.Game = this;
@@ -23,4 +23,15 @@ public class GameManager : MonoBehaviour
     {
         Services.InitServices();
     }
+
+    public void Init()
+    {
+        SetLevel();
+    }
+    public void SetLevel()
+    {
+        currentLevel = levels[0];
+        Services.HikerGenerator.ResetHikerSelection();
+    }
+
 }

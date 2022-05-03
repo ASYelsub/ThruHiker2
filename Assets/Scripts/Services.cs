@@ -25,6 +25,18 @@ public class Services
         }
         set => _trailGenerator = value;
     }
+
+    private static HikerGenerator _hikerGenerator;
+    public static HikerGenerator HikerGenerator
+    {
+        get
+        {
+            Debug.Assert(_hikerGenerator != null);
+            return _hikerGenerator;
+        }
+        set => _hikerGenerator = value;
+    }
+
     private static Player _player;
     public static Player Player
     {
@@ -40,8 +52,10 @@ public class Services
 
     public static void InitServices()
     {
+        Game.Init();
         TrailGenerator.Init();
         Player.Init();
+        HikerGenerator.Init();
     }
 
 }

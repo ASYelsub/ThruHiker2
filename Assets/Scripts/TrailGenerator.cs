@@ -39,6 +39,7 @@ public class TrailGenerator : MonoBehaviour
     [HideInInspector] public List<GameObject> nonTrail_slotBatch = new List<GameObject>();
     [HideInInspector] public List<GameObject> plantBatch = new List<GameObject>();
 
+    int firstTrailCount, entireTrailCount;
     public void Awake()
     {
         Services.TrailGenerator = this;
@@ -155,27 +156,9 @@ public class TrailGenerator : MonoBehaviour
             t.trailInt = trailCounter;
             trailCounter++;
             trail.AddLast(t);
+            firstTrailCount = trailCounter;
         }
 
-
-        //Make second trail
-        startX = UnityEngine.Random.Range(0, trailList.Count - 10);
-        endX = UnityEngine.Random.Range(startX, trailList.Count);
-
-        // trailList[startX].isTrail = false;
-        // trailList[endX].isTrail = false;
-
-        List<SpaceSlot> secondTrailList = GetPathDFS(grid, trailList[startX], trailList[endX]);
-
-        foreach (SpaceSlot t in secondTrailList)
-        {
-            t.SetSlotToPath();
-            t.isTrail = true;
-            // notTrailSpots.Remove(t);
-            t.trailInt = trailCounter;
-            trailCounter++;
-            // trailOther.AddLast(t);
-        }
 
         foreach (SpaceSlot s in notTrailSpots)
         {
@@ -313,9 +296,9 @@ public class TrailGenerator : MonoBehaviour
             float tempBendyness = _bendyness; //if bendyness is over .8 then not enough tiles spawn
             float tempBendySeparation = _bendySeparation;
 
+
             foreach (SearchVertex n in tempSet)
             {
-
                 tempBendySeparation = _bendySeparation + (n.Slope) * 100;
 
                 float totalBend = tempBendyness + ExtensionMethods.Remap(tempBendySeparation, 0, 1, 0, .4f);
@@ -347,6 +330,8 @@ public class TrailGenerator : MonoBehaviour
                 // dydx[i] = Differentiate(x[i]);
                 openSet.Add(n);
             }
+
+
             //foreach in tempset add to open set --> a purely random wandering. if we want to trend towards up, can assign different weights to shuffling
             //so its more likely so that up is first or last, or leave out a neighbor like the back neighbor, so that it never goes back
             closedSet.Add(currentVertex);
@@ -373,8 +358,6 @@ public class TrailGenerator : MonoBehaviour
 
     bool IsPointNavigable(SpaceSlot[,] indexGrid, Vector2Int point)
     {
-        // if (indexGrid[point.x, point.y].isTrail)
-        //     return false;
         if (IsPointInGrid(point) == false)
             return false;
         if (indexGrid[point.x, point.y].navigableVal == 1)

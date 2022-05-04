@@ -8,6 +8,8 @@ public class SpaceSlot : MonoBehaviour
 
     //unsure what to do with this other than like it'll interact
     //w the visual part of Unity?
+    public List<GameObject> treeObjs = new List<GameObject>();
+    public List<GameObject> plantObjs = new List<GameObject>();
     public List<GameObject> childObjects = new List<GameObject>();
     [HideInInspector] public int navigableVal = 0;
     [HideInInspector] public Vector2Int point;
@@ -30,8 +32,7 @@ public class SpaceSlot : MonoBehaviour
     public Transform plantTransform, treeTransform, groundTransform, rockTransform;
     public float plantChance = 0;
     [HideInInspector] public int trailInt;
-    public List<GameObject> treeObjs = new List<GameObject>();
-    public List<GameObject> plantObjs = new List<GameObject>();
+
     public SpaceSlot(Vector3 firstPointInSpace, Vector3 secondPointInSpace, GameObject slotPrefab, GameObject trailHolder, Material slotMat, float slope)
     {
         this.firstPointInSpace = firstPointInSpace;
@@ -50,6 +51,7 @@ public class SpaceSlot : MonoBehaviour
     {
         this.slope = slope;
         this.firstPointInSpace = gameObject.transform.position;
+        this.secondPointInSpace = firstPointInSpace + Vector3.right;
         // groundTransform.gameObject.isStatic = false;
         // Debug.Log("here");
         // Debug.Log(slope);
@@ -99,6 +101,7 @@ public class SpaceSlot : MonoBehaviour
         if (hikerInFirstPoint == null)
         {
             this.hikerInFirstPoint = hiker;
+            hiker.transform.position = firstPointInSpace;
         }
         else
         {
@@ -111,14 +114,11 @@ public class SpaceSlot : MonoBehaviour
 
     public void PutHikerInSecondtPoint(Hiker hiker)
     {
-        if (HikerInSecondPoint == null)
-        {
-            this.HikerInSecondPoint = hiker;
-        }
-        else
-        {
-            // Console.WriteLine(this.hikerInSecondPoint.CodeName + "is already in this slot's second point.");
-        }
+        if (hikerInSecondPoint != null)
+            return;
+
+        this.HikerInSecondPoint = hiker;
+        hiker.transform.position = secondPointInSpace;
 
     }
 

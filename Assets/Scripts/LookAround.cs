@@ -142,6 +142,10 @@ public class LookAround : MonoBehaviour
         // Rotation
         // if (Input.GetMouseButton(1))
         // {
+        if (Cursor.lockState.Equals(CursorLockMode.Confined))
+        {
+            return;
+        }
         var mouseMovement = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y") * (invertY ? 1 : -1));
 
         var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);

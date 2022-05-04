@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
 
     [HideInInspector] public System.Collections.Generic.LinkedListNode<SpaceSlot> myCurrentSlot;
+    [SerializeField] Camera playerCamera;
     void Awake()
     {
         Services.Player = this;
@@ -16,19 +17,34 @@ public class Player : MonoBehaviour
         // SetPlayerPosOnTrailStart();
     }
 
+
     public void SetPlayerPosOnTrailStart()
     {
         myCurrentSlot = Services.TrailGenerator.trail.First;
         transform.position = myCurrentSlot.Value.transform.position;
     }
+
+    public void DisablePlayerControls()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    public void EnablePlayerControls()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+    }
+
     public void Update()
     {
+        Services.CanvasDisplay.map.MapUpdate();
+
         if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W))
         {
             if (_moving)
                 return;
             MovementStep();
         }
+
     }
 
     //Also makes all the kids move forward one

@@ -47,7 +47,16 @@ public class Services
         }
         set => _player = value;
     }
-
+    private static CanvasDisplayManager _canvasDisplayManager;
+    public static CanvasDisplayManager CanvasDisplay
+    {
+        get
+        {
+            Debug.Assert(_canvasDisplayManager != null);
+            return _canvasDisplayManager;
+        }
+        set => _canvasDisplayManager = value;
+    }
 
 
     public static void InitServices()
@@ -56,6 +65,7 @@ public class Services
         TrailGenerator.Init();
         Player.Init();
         HikerGenerator.Init();
+        CanvasDisplay.Init();
     }
 
 }

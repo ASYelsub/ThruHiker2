@@ -6,10 +6,13 @@ public class HikerGenerator : MonoBehaviour
 {
     public List<Hiker> activeHikers = new List<Hiker>();
     public List<GameObject> preMadehikers = new List<GameObject>();
+    [SerializeField] float hikerSpawnBufferSeconds = 10f;
     Queue<Hiker> queuedHikers = new Queue<Hiker>();
     public GameObject hikerPrefab;
     [SerializeField] TextAsset firstNamesAsset;
     [SerializeField] TextAsset lastNamesAsset;
+    List<NameData> firstNames = new List<NameData>();
+    List<NameData> lastNames = new List<NameData>();
 
     class NameData
     {
@@ -20,10 +23,8 @@ public class HikerGenerator : MonoBehaviour
             name = n;
             selected = false;
         }
-
     }
-    List<NameData> firstNames = new List<NameData>();
-    List<NameData> lastNames = new List<NameData>();
+
     public void Awake() { Services.HikerGenerator = this; }
 
     public void Init()
@@ -31,6 +32,7 @@ public class HikerGenerator : MonoBehaviour
         InitTextAssetData();
         ResetHikerSelection();
         GenerateHikers();
+        StartHikerSpawn();
     }
 
     void InitTextAssetData()
@@ -53,6 +55,7 @@ public class HikerGenerator : MonoBehaviour
             nd.selected = false;
         }
     }
+
     void GenerateHikers()
     {
         int hikersInLevel = Services.Game.currentLevel.hikersInLevel;
@@ -74,6 +77,7 @@ public class HikerGenerator : MonoBehaviour
         firstNameData.selected = true;
         return firstNameData.name;
     }
+
     string GetRandomLastName()
     {
         NameData lastNameData = lastNames[Random.Range(0, lastNames.Count)];
@@ -82,8 +86,23 @@ public class HikerGenerator : MonoBehaviour
         return lastNameData.name;
     }
 
-
-
+    void StartHikerSpawn()
+    {
+        StartCoroutine(HikerSpawnRoutine());
+    }
+    IEnumerator HikerSpawnRoutine()
+    {
+        while (queuedHikers.Count > 0)
+        {
+            Hiker h = queuedHikers.Dequeue();
+            h.ActivateHiker(Services.TrailGenerator.trail.First);
+            activeHikers.Add(h);
+            yield return new WaitForSeconds(hikerSpawnBufferSeconds);
+            yield return null;
+        }
+        Debug.Log("All hikers spawned!");
+        yield break;
+    }
 
 
 

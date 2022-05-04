@@ -18,18 +18,18 @@ public class HikersEditor : Editor
         // if (GUILayout.Button("Add Level"),GUILayout.Height(35.0f)){
 
         // }
-        hikerObject.firstName = EditorGUILayout.TextField("First Name", hikerObject.firstName);
-        hikerObject.lastName = EditorGUILayout.TextField("Last Name", hikerObject.lastName);
-        for (int i = 0; i < hikerObject.appearanceLevels.Count; i++)
-        {
-            // EditorGUILayout.LabelField(hikerObject.appearanceLevels[i].ToString());
-            // hikerObject.appearanceLevels[i] = EditorGUILayout.TextField("Level #", hikerObject.appearanceLevels[i]);
-        }
+        // hikerObject.firstName = EditorGUILayout.TextField("First Name", hikerObject.firstName);
+        // hikerObject.lastName = EditorGUILayout.TextField("Last Name", hikerObject.lastName);
+        // // for (int i = 0; i < hikerObject.appearanceLevels.Count; i++)
+        // {
+        //     // EditorGUILayout.LabelField(hikerObject.appearanceLevels[i].ToString());
+        //     // hikerObject.appearanceLevels[i] = EditorGUILayout.TextField("Level #", hikerObject.appearanceLevels[i]);
+        // }
     }
-    public override void OnInspectorGUI()
-    {
-        MyGUI();
-        //Will draw default inspector:
-        //        DrawDefaultInspector();
-    }
+    // public override void OnInspectorGUI()
+    // {
+    //     MyGUI();
+    //     //Will draw default inspector:
+    //     //        DrawDefaultInspector();
+    // }
 }

@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
 
     [HideInInspector] public System.Collections.Generic.LinkedListNode<SpaceSlot> myCurrentSlot;
     [SerializeField] Camera playerCamera;
+    [SerializeField] private float _moveTransitionSeconds;
+    private bool _moving = false;
+
     void Awake()
     {
         Services.Player = this;
@@ -16,7 +19,6 @@ public class Player : MonoBehaviour
     {
         // SetPlayerPosOnTrailStart();
     }
-
 
     public void SetPlayerPosOnTrailStart()
     {
@@ -59,8 +61,6 @@ public class Player : MonoBehaviour
         myCurrentSlot = myCurrentSlot.Next;
     }
 
-    [SerializeField] private float _moveTransitionSeconds;
-    private bool _moving = false;
     IEnumerator MoveTransition(SpaceSlot oldSlot, SpaceSlot newSlot)
     {
         _moving = true;

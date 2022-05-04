@@ -50,14 +50,8 @@ public class SpaceSlot : MonoBehaviour
     public void Init(float slope)
     {
         this.slope = slope;
-        this.firstPointInSpace = gameObject.transform.position;
+        this.firstPointInSpace = gameObject.transform.position + Vector3.up;
         this.secondPointInSpace = firstPointInSpace + Vector3.right;
-        // groundTransform.gameObject.isStatic = false;
-        // Debug.Log("here");
-        // Debug.Log(slope);
-        // groundTransform.Rotate(new Vector3(0, 0, slope));
-
-        // groundTransform.gameObject.isStatic = true;
     }
 
     public void SetSlotToTree()

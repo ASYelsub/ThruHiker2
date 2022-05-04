@@ -7,6 +7,7 @@ public class Map : MonoBehaviour
     bool mapEnabled = false;
     [SerializeField] Camera mapCamera;
     float panSpeed = 3f;
+
     void Start()
     {
         DisableMap();
@@ -31,6 +32,7 @@ public class Map : MonoBehaviour
             ZoomMap();
         }
     }
+
     public void ToggleMap()
     {
         if (mapEnabled)
@@ -44,6 +46,7 @@ public class Map : MonoBehaviour
             return;
         }
     }
+
     void EnableMap()
     {
         mapCamera.gameObject.SetActive(true);
@@ -51,6 +54,7 @@ public class Map : MonoBehaviour
         mapEnabled = true;
         Services.Player.DisablePlayerControls();
     }
+
     void DisableMap()
     {
         mapCamera.gameObject.SetActive(false);
@@ -58,6 +62,7 @@ public class Map : MonoBehaviour
         mapEnabled = false;
         Services.Player.EnablePlayerControls();
     }
+
     void ZoomMap()
     {
         float xIncrease = -Input.GetAxis("Mouse X") * panSpeed;
@@ -75,6 +80,7 @@ public class Map : MonoBehaviour
         mapCamera.orthographicSize += xIncrease;
         mapCamera.orthographicSize += yIncrease;
     }
+
     public void ScrollMap()
     {
         float mouseY = -Input.GetAxis("Mouse Y");
@@ -86,14 +92,15 @@ public class Map : MonoBehaviour
                 return;
             }
         }
+
         if (mapCamera.transform.position.z <= Services.TrailGenerator.trail.First.Value.transform.position.z)
         {
             if (mouseY < 0)
             {
                 return;
             }
-
         }
+
         mapCamera.transform.position += new Vector3(0, 0, 1f) * mouseY;
     }
 

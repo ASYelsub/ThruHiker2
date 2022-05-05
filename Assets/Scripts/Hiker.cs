@@ -15,18 +15,24 @@ public class Hiker : MonoBehaviour
     System.Collections.Generic.LinkedListNode<SpaceSlot> currentSpaceSlot;
     float moveSeconds;
     bool moving = false;
+    Transform camTransform;
 
+    Quaternion originalRotation;
+
+
+    void FixedUpdate()
+    {
+        transform.rotation = camTransform.rotation * originalRotation;
+    }
     public void Init(string firstName, string lastName)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.firstNameTMP.text = firstName;
         this.lastNameTMP.text = lastName;
-        this.moveSeconds = Random.value;
-        while (moveSeconds == 0)
-        {
-            this.moveSeconds = Random.value;
-        }
+        this.moveSeconds = UnityEngine.Random.Range(.3f, 1f);
+        this.originalRotation = transform.rotation;
+        this.camTransform = Camera.main.GetComponent<Transform>();
     }
 
     public void ActivateHiker(System.Collections.Generic.LinkedListNode<SpaceSlot> startSlot)

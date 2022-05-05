@@ -23,31 +23,72 @@ public class Hiker : MonoBehaviour
         this.firstNameTMP.text = firstName;
         this.lastNameTMP.text = lastName;
         this.moveSeconds = Random.value;
+        while (moveSeconds == 0)
+        {
+            this.moveSeconds = Random.value;
+        }
     }
 
     public void ActivateHiker(System.Collections.Generic.LinkedListNode<SpaceSlot> startSlot)
     {
         myState = HikerState.active;
-        if (startSlot.Equals(Services.TrailGenerator.trail.First.Value)) { myDirection = HikerDirection.goingUp; }
-        if (startSlot.Equals(Services.TrailGenerator.trail.Last.Value)) { myDirection = HikerDirection.goingDown; }
+        if (startSlot.Value.Equals(Services.TrailGenerator.trail.First.Value))
+        {
+            myDirection = HikerDirection.goingUp;
+        }
+        else if (startSlot.Value.Equals(Services.TrailGenerator.trail.Last.Value))
+        {
+            myDirection = HikerDirection.goingDown;
+        }
         currentSpaceSlot = startSlot;
         MoveToCurrentTrailSlot();
+        StartCoroutine(HikeRoutine());
     }
 
     IEnumerator HikeRoutine()
     {
-        while (!currentSpaceSlot.Next.Equals(null))
+        if (myDirection.Equals(HikerDirection.goingUp))
         {
-            if (moving)
+            while (!currentSpaceSlot.Next.Equals(null))
             {
+                if (!moving)
+                {
+                    yield return MoveUpSlot();
+                    while (moving)
+                    {
+                        yield return null;
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(moveSeconds);
+                    yield return null;
+                }
 
             }
-            else
-            {
-
-            }
+            yield break;
         }
-        yield break;
+        else if (myDirection.Equals(HikerDirection.goingDown))
+        {
+            while (!currentSpaceSlot.Previous.Equals(null))
+            {
+                if (!moving)
+                {
+                    yield return MoveDownSlot();
+                    while (moving)
+                    {
+                        yield return null;
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(moveSeconds);
+                    yield return null;
+                }
+            }
+            yield break;
+        }
+
     }
 
     public void FinishHike()

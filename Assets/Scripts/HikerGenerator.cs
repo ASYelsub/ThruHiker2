@@ -6,7 +6,7 @@ public class HikerGenerator : MonoBehaviour
 {
     public List<Hiker> activeHikers = new List<Hiker>();
     public List<GameObject> preMadehikers = new List<GameObject>();
-    [SerializeField] float hikerSpawnBufferSeconds = 10f;
+    float hikerSpawnBufferSeconds = 10f;
     Queue<Hiker> queuedHikers = new Queue<Hiker>();
     public GameObject hikerPrefab;
     [SerializeField] TextAsset firstNamesAsset;

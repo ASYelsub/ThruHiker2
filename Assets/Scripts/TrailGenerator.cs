@@ -150,7 +150,9 @@ public class TrailGenerator : MonoBehaviour
 
         foreach (SpaceSlot s in notTrailSpots)
         {
-
+            //Technique to cluster plants/rocks/trees?
+            //Use perlin noise (like with shader) to have 0 be trees or 1 be plants or something
+            //Ambient sound effects could benefit this: birds chirping, wind, etc.
             if (s.plantChance > 1)
             {
                 s.SetSlotToRock();
@@ -158,7 +160,6 @@ public class TrailGenerator : MonoBehaviour
             }
             if (s.plantChance >= 1)
             {
-
                 s.SetSlotToPlant(UnityEngine.Random.Range(.4f, .9f), UnityEngine.Random.Range(0f, 360f));
                 continue;
             }

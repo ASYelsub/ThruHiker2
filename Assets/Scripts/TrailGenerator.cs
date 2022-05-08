@@ -132,6 +132,10 @@ public class TrailGenerator : MonoBehaviour
         //Grid done being generated//
 
 
+        //Assign all space slots a noise value//
+        NoiseSpaceSlotSet();
+
+
         //Make first trail
         trailList = GetPathDFS(grid, gridList[startX], gridList[gridList.Count - endX]);
 
@@ -148,7 +152,38 @@ public class TrailGenerator : MonoBehaviour
             firstTrailCount = trailCounter;
         }
 
+        BasicSpaceSlotSet();
 
+
+        Services.Player.SetPlayerPosOnTrailStart();
+    }
+    public NoiseMethodType type;
+    public float frequency = 1f;
+    [Range(1, 8)]
+    public int octaves = 1;
+
+    [Range(1f, 4f)]
+    public float lacunarity = 2f;
+
+    [Range(0f, 1f)]
+    public float persistence = 0.5f;
+    void NoiseSpaceSlotSet()
+    {
+        NoiseMethod method = Noise.methods[(int)type][2];
+        //Noise to SpaceSlots
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                float sample = Noise.Sum(method, new Vector3(i, j, 0), frequency, octaves, lacunarity, persistence).value;
+                sample = sample * 0.5f + 0.5f;
+                grid[i, j].SetNoiseVal(sample);
+            }
+        }
+    }
+
+    void BasicSpaceSlotSet()
+    {
         foreach (SpaceSlot s in notTrailSpots)
         {
             //Technique to cluster plants/rocks/trees?
@@ -181,10 +216,7 @@ public class TrailGenerator : MonoBehaviour
         {
             s.SetSlotToTree();
         }
-
-        Services.Player.SetPlayerPosOnTrailStart();
     }
-
 
 
     List<SpaceSlot> GetPathDFS(SpaceSlot[,] indexGrid, SpaceSlot startPoint, SpaceSlot endPoint)

@@ -112,7 +112,4 @@ public class HikerGenerator : MonoBehaviour
         yield break;
     }
 
-
-
-
 }

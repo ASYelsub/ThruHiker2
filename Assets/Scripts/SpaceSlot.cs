@@ -33,6 +33,7 @@ public class SpaceSlot : MonoBehaviour
     public float plantChance = 0;
     [HideInInspector] public int trailInt;
     [HideInInspector] public LinkedListNode<SpaceSlot> myLink;
+    public float noiseVal;
 
     public SpaceSlot(Vector3 firstPointInSpace, Vector3 secondPointInSpace, GameObject slotPrefab, GameObject trailHolder, Material slotMat, float slope)
     {
@@ -46,7 +47,12 @@ public class SpaceSlot : MonoBehaviour
         newSlot.GetComponent<MeshRenderer>().material = slotMat;
 
     }
+    public void SetNoiseVal(float val)
+    {
+        noiseVal = val;
+        groundTransform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(noiseVal, noiseVal, noiseVal);
 
+    }
     public void Init(float slope)
     {
         this.slope = slope;

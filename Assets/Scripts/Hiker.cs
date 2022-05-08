@@ -40,7 +40,8 @@ public class Hiker : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.rotation = camTransform.rotation * originalRotation;
+        firstNameTMP.transform.rotation = camTransform.rotation * originalRotation;
+        lastNameTMP.transform.rotation = camTransform.rotation * originalRotation;
     }
 
     public void ActivateHiker(System.Collections.Generic.LinkedListNode<SpaceSlot> startSlot)

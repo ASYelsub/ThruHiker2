@@ -96,7 +96,14 @@ public class HikerGenerator : MonoBehaviour
         while (queuedHikers.Count > 0)
         {
             Hiker h = queuedHikers.Dequeue();
-            h.ActivateHiker(Services.TrailGenerator.trail.First);
+            if (Random.value > .5f)
+            {
+                h.ActivateHiker(Services.TrailGenerator.trail.First);
+            }
+            else
+            {
+                h.ActivateHiker(Services.TrailGenerator.trail.Last);
+            }
             activeHikers.Add(h);
             yield return new WaitForSeconds(hikerSpawnBufferSeconds);
             yield return null;

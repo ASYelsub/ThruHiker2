@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Map : MonoBehaviour
 {
-    bool mapEnabled = false;
     [SerializeField] Camera mapCamera;
+
+    Hiker highlightedHiker;
     float panSpeed = 3f;
+    bool mapEnabled = false;
 
     void Start()
     {
@@ -31,7 +34,37 @@ public class Map : MonoBehaviour
         {
             ZoomMap();
         }
+
+        if (!mapEnabled)
+            return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+
+            if (hit.transform.Equals(transform))
+            {
+                ray = mapCamera.ViewportPointToRay(hit.textureCoord);
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.gameObject.GetComponentInParent<Hiker>() != null)
+                        hit.transform.gameObject.GetComponentInParent<Hiker>().HighlightHikerOnMap();
+                }
+                else
+                {
+                    foreach (Hiker h in Services.HikerGenerator.activeHikers)
+                    {
+                        h.UnHighlightHikerOnMap();
+                    }
+                }
+            }
+
+
+        }
     }
+
+
 
     public void ToggleMap()
     {
@@ -86,24 +119,27 @@ public class Map : MonoBehaviour
     public void ScrollMap()
     {
         float mouseY = -Input.GetAxis("Mouse Y");
-
         if (mapCamera.transform.position.z >= Services.TrailGenerator.trail.Last.Value.transform.position.z)
         {
-            if (mouseY > 0)
-            {
-                return;
-            }
+            if (mouseY > 0) { return; }
         }
-
         if (mapCamera.transform.position.z <= Services.TrailGenerator.trail.First.Value.transform.position.z)
         {
-            if (mouseY < 0)
-            {
-                return;
-            }
+            if (mouseY < 0) { return; }
         }
-
         mapCamera.transform.position += new Vector3(0, 0, 1f) * mouseY;
+
+
+        float mouseX = -Input.GetAxis("Mouse X");
+        if (mapCamera.transform.localPosition.x >= 8f)
+        {
+            if (mouseX > 0) { return; }
+        }
+        if (mapCamera.transform.localPosition.x <= -8f)
+        {
+            if (mouseX < 0) { return; }
+        }
+        mapCamera.transform.localPosition += new Vector3(1f, 0, 0) * mouseX;
     }
 
 }

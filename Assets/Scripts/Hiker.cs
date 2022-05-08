@@ -7,9 +7,10 @@ public enum HikerDirection { goingUp, goingDown }
 public class Hiker : MonoBehaviour
 {
     [SerializeField] List<Material> potentialMaterials = new List<Material>();
+    [SerializeField] MeshRenderer highlightRenderer;
     [SerializeField] MeshRenderer hikerBody;
-    [SerializeField] TextMeshPro firstNameTMP;
-    [SerializeField] TextMeshPro lastNameTMP;
+    [SerializeField] TextMeshPro firstNameTMP, firstNameMapTMP;
+    [SerializeField] TextMeshPro lastNameTMP, lastNameMapTMP;
     [SerializeField] string firstName;
     [SerializeField] string lastName;
     HikerState myState = HikerState.dorment;
@@ -25,7 +26,9 @@ public class Hiker : MonoBehaviour
         this.firstName = firstName;
         this.lastName = lastName;
         this.firstNameTMP.text = firstName;
+        this.firstNameMapTMP.text = firstName;
         this.lastNameTMP.text = lastName;
+        this.lastNameMapTMP.text = lastName;
         this.moveSeconds = UnityEngine.Random.Range(.3f, 1f);
         this.originalRotation = transform.rotation;
         this.camTransform = Camera.main.GetComponent<Transform>();
@@ -185,5 +188,16 @@ public class Hiker : MonoBehaviour
     {
         myState = HikerState.active;
     }
-
+    public void HighlightHikerOnMap()
+    {
+        firstNameMapTMP.gameObject.SetActive(true);
+        lastNameMapTMP.gameObject.SetActive(true);
+        highlightRenderer.gameObject.SetActive(true);
+    }
+    public void UnHighlightHikerOnMap()
+    {
+        firstNameMapTMP.gameObject.SetActive(false);
+        lastNameMapTMP.gameObject.SetActive(false);
+        highlightRenderer.gameObject.SetActive(false);
+    }
 }

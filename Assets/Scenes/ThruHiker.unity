@@ -883,8 +883,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeHikers: []
-  preMadehikers: []
-  hikerSpawnBufferSeconds: 10
+  premadeHikers: []
+  hikerSpawnBufferSeconds: 1
   hikerPrefab: {fileID: 3921971587191640328, guid: 52b68b7e749a445f09ff72ddddd3e2e0, type: 3}
   firstNamesAsset: {fileID: 4900000, guid: e172976a1309645b6b9e56c66d14f134, type: 3}
   lastNamesAsset: {fileID: 4900000, guid: 49217f09041fe4c97849611b20b94184, type: 3}

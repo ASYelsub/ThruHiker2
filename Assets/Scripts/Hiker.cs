@@ -16,14 +16,13 @@ public class Hiker : MonoBehaviour
     float moveSeconds;
     bool moving = false;
     Transform camTransform;
-
     Quaternion originalRotation;
-
 
     void FixedUpdate()
     {
         transform.rotation = camTransform.rotation * originalRotation;
     }
+
     public void Init(string firstName, string lastName)
     {
         this.firstName = firstName;
@@ -70,31 +69,9 @@ public class Hiker : MonoBehaviour
                     yield return new WaitForSeconds(moveSeconds);
                     yield return null;
                 }
-
             }
             yield break;
         }
-        else if (myDirection.Equals(HikerDirection.goingDown))
-        {
-            while (!currentSpaceSlot.Previous.Equals(null))
-            {
-                if (!moving)
-                {
-                    yield return MoveDownSlot();
-                    while (moving)
-                    {
-                        yield return null;
-                    }
-                }
-                else
-                {
-                    yield return new WaitForSeconds(moveSeconds);
-                    yield return null;
-                }
-            }
-            yield break;
-        }
-
     }
 
     public void FinishHike()
@@ -117,26 +94,6 @@ public class Hiker : MonoBehaviour
         MoveToCurrentTrailSlot();
 
         if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.Last))
-        {
-            FinishHike();
-        }
-        moving = false;
-        yield break;
-    }
-
-    IEnumerator MoveDownSlot()
-    {
-        moving = true;
-        float t = 0f;
-        while (t < 1f)
-        {
-            transform.position = Vector3.Lerp(currentSpaceSlot.Value.SecondPointInSpace, currentSpaceSlot.Previous.Value.SecondPointInSpace, t);
-            t += Time.deltaTime / moveSeconds;
-            yield return null;
-        }
-        currentSpaceSlot = currentSpaceSlot.Previous;
-        MoveToCurrentTrailSlot();
-        if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.First))
         {
             FinishHike();
         }

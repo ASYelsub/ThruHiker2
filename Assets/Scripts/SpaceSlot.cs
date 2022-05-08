@@ -19,8 +19,8 @@ public class SpaceSlot : MonoBehaviour
     private Vector3 firstPointInSpace; //where character slots into, usually the kids, on "the left" of trail
     private Vector3 secondPointInSpace; //where a second character slots into... eithr a kid or another hiker
                                         //can be irritating for other hikers if kid slots into here and they cant pass
-    private bool firstPointFilled; //if a character is currently at the location
-    private bool secondPointFilled;
+    [HideInInspector] public bool firstPointFilled = false; //if a character is currently at the location
+    [HideInInspector] public bool secondPointFilled = false;
     private SlotTypes slotTypes;
     SlotTypes mySlotType = SlotTypes.Plants;
     private Vector3 v1;
@@ -37,7 +37,6 @@ public class SpaceSlot : MonoBehaviour
     {
         this.firstPointInSpace = firstPointInSpace;
         this.secondPointInSpace = secondPointInSpace;
-        this.firstPointFilled = false;
         this.slotMat = slotMat;
         this.slope = slope;
 
@@ -90,30 +89,40 @@ public class SpaceSlot : MonoBehaviour
         SetRockOff();
         SetTreeOff();
     }
-    public void PutHikerInFirstPoint(Hiker hiker)
+    public void PutHikerInPoint(Hiker hiker)
     {
-        if (hikerInFirstPoint == null)
+        if (!firstPointFilled)
         {
             this.hikerInFirstPoint = hiker;
-            hiker.transform.position = firstPointInSpace;
+            firstPointFilled = true;
+            return;
         }
-        else
+        else if (!secondPointFilled)
         {
-            // Console.WriteLine(this.hikerInFirstPoint.CodeName + "is already in this slot's first point.");
-            PutHikerInSecondtPoint(hiker);
-            Console.WriteLine("Attempting to put " + hiker + " in second point.");
+            this.hikerInSecondPoint = hiker;
+            secondPointFilled = true;
+            return;
         }
-
     }
 
-    public void PutHikerInSecondtPoint(Hiker hiker)
+    public void ResetSpaceSlotFill(Hiker hiker)
     {
-        if (hikerInSecondPoint != null)
+        if (hiker.Equals(hikerInFirstPoint))
+        {
+            firstPointFilled = false;
             return;
-
-        this.HikerInSecondPoint = hiker;
-        hiker.transform.position = secondPointInSpace;
-
+        }
+        else if (hiker.Equals(hikerInSecondPoint))
+        {
+            secondPointFilled = false;
+            return;
+        }
+    }
+    public bool HasSpace()
+    {
+        if (secondPointFilled && firstPointFilled)
+            return false;
+        return true;
     }
 
 

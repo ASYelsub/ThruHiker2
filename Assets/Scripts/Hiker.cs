@@ -8,7 +8,7 @@ public class Hiker : MonoBehaviour
 {
     [SerializeField] List<Material> potentialMaterials = new List<Material>();
     [SerializeField] MeshRenderer highlightRenderer;
-    [SerializeField] MeshRenderer hikerBody;
+    [SerializeField] MeshRenderer hikerBody, hikerMapBody;
     [SerializeField] TextMeshPro firstNameTMP, firstNameMapTMP;
     [SerializeField] TextMeshPro lastNameTMP, lastNameMapTMP;
     [SerializeField] string firstName;
@@ -33,6 +33,7 @@ public class Hiker : MonoBehaviour
         this.originalRotation = transform.rotation;
         this.camTransform = Camera.main.GetComponent<Transform>();
         this.hikerBody.material = potentialMaterials[UnityEngine.Random.Range(0, potentialMaterials.Count)];
+        this.hikerMapBody.material = potentialMaterials[UnityEngine.Random.Range(0, potentialMaterials.Count)];
         float currentScale = hikerBody.transform.localScale.y;
         float randScale = UnityEngine.Random.Range(.3f, 1f) * currentScale;
         this.hikerBody.transform.localScale = new Vector3(randScale, currentScale, randScale);

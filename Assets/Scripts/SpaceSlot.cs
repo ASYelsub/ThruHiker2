@@ -32,6 +32,7 @@ public class SpaceSlot : MonoBehaviour
     public Transform plantTransform, treeTransform, groundTransform, rockTransform;
     public float plantChance = 0;
     [HideInInspector] public int trailInt;
+    [HideInInspector] public LinkedListNode<SpaceSlot> myLink;
 
     public SpaceSlot(Vector3 firstPointInSpace, Vector3 secondPointInSpace, GameObject slotPrefab, GameObject trailHolder, Material slotMat, float slope)
     {
@@ -63,12 +64,11 @@ public class SpaceSlot : MonoBehaviour
         }
         else if (!secondPointFilled)
         {
-            Debug.Log('b');
             this.hikerInSecondPoint = hiker;
             secondPointFilled = true;
             return secondPointInSpace;
         }
-        Debug.Log('c');
+
         return Vector3.zero;
     }
 

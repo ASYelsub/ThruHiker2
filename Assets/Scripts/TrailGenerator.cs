@@ -144,6 +144,7 @@ public class TrailGenerator : MonoBehaviour
             t.trailInt = trailCounter;
             trailCounter++;
             trail.AddLast(t);
+            trail.Last.Value.myLink = trail.Last;
             firstTrailCount = trailCounter;
         }
 

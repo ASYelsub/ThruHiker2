@@ -216,10 +216,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599de32ded19c4c0997e0923103117da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstName: 
-  lastName: 
+  potentialMaterials:
+  - {fileID: 2100000, guid: e44594cd2de2a4d98913617c98ef09b8, type: 2}
+  - {fileID: 2100000, guid: 16d0cd17dac4a4f1bb5d96a74d5eb2db, type: 2}
+  - {fileID: 2100000, guid: 595a169c093944314a1946610d96b0d9, type: 2}
+  hikerBody: {fileID: 4102341457159223791}
   firstNameTMP: {fileID: 6041673921977041415}
   lastNameTMP: {fileID: 2229384238242890256}
+  firstName: 
+  lastName: 
 --- !u!1 &8465448752755677200
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,7 +422,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8647664180946880609}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.2622093, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 0.54846996, y: 0.54846996, z: 0.54846996}
   m_Children: []
   m_Father: {fileID: 4153504135677863213}

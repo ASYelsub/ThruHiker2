@@ -6,22 +6,19 @@ public enum HikerState { dorment, active, waiting, finished }
 public enum HikerDirection { goingUp, goingDown }
 public class Hiker : MonoBehaviour
 {
-    [SerializeField] string firstName;
-    [SerializeField] string lastName;
+    [SerializeField] List<Material> potentialMaterials = new List<Material>();
+    [SerializeField] MeshRenderer hikerBody;
     [SerializeField] TextMeshPro firstNameTMP;
     [SerializeField] TextMeshPro lastNameTMP;
+    [SerializeField] string firstName;
+    [SerializeField] string lastName;
     HikerState myState = HikerState.dorment;
     HikerDirection myDirection;
-    System.Collections.Generic.LinkedListNode<SpaceSlot> currentSpaceSlot;
+    LinkedListNode<SpaceSlot> currentSpaceSlot;
     float moveSeconds;
     bool moving = false;
     Transform camTransform;
     Quaternion originalRotation;
-
-    void FixedUpdate()
-    {
-        transform.rotation = camTransform.rotation * originalRotation;
-    }
 
     public void Init(string firstName, string lastName)
     {
@@ -32,6 +29,15 @@ public class Hiker : MonoBehaviour
         this.moveSeconds = UnityEngine.Random.Range(.3f, 1f);
         this.originalRotation = transform.rotation;
         this.camTransform = Camera.main.GetComponent<Transform>();
+        this.hikerBody.material = potentialMaterials[UnityEngine.Random.Range(0, potentialMaterials.Count)];
+        float currentScale = hikerBody.transform.localScale.y;
+        float randScale = UnityEngine.Random.Range(.3f, 1f) * currentScale;
+        this.hikerBody.transform.localScale = new Vector3(randScale, currentScale, randScale);
+    }
+
+    void FixedUpdate()
+    {
+        transform.rotation = camTransform.rotation * originalRotation;
     }
 
     public void ActivateHiker(System.Collections.Generic.LinkedListNode<SpaceSlot> startSlot)
@@ -58,7 +64,27 @@ public class Hiker : MonoBehaviour
             {
                 if (!moving)
                 {
-                    yield return MoveUpSlotRoutine();
+                    yield return MoveSlotRoutine(currentSpaceSlot.Next.Value);
+                    while (moving)
+                    {
+                        yield return null;
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(moveSeconds);
+                    yield return null;
+                }
+            }
+            yield break;
+        }
+        else if (myDirection.Equals(HikerDirection.goingDown))
+        {
+            while (!currentSpaceSlot.Previous.Equals(null))
+            {
+                if (!moving)
+                {
+                    yield return MoveSlotRoutine(currentSpaceSlot.Previous.Value);
                     while (moving)
                     {
                         yield return null;
@@ -74,43 +100,45 @@ public class Hiker : MonoBehaviour
         }
     }
 
-    public void FinishHike()
+    void FinishHike()
     {
         myState = HikerState.finished;
     }
 
-    IEnumerator MoveUpSlotRoutine()
+    IEnumerator MoveSlotRoutine(SpaceSlot targetSlot)
     {
         moving = true;
 
         //Check that there is space to move into.
-        if (!currentSpaceSlot.Next.Value.HasSpace())
+        if (!targetSlot.HasSpace())
         {
-            myState = HikerState.waiting;
-            while (!currentSpaceSlot.Next.Value.HasSpace())
+            StartWait();
+            while (!targetSlot.HasSpace())
             {
                 yield return null;
             }
-            myState = HikerState.active;
+            EndWait();
         }
 
         Vector3 startPos = transform.position;
-        Vector3 endPos = currentSpaceSlot.Next.Value.PutHikerInPoint(this);
+        Vector3 endPos = targetSlot.PutHikerInPoint(this);
 
         //Check again.
         if (endPos.Equals(Vector3.zero))
         {
-            myState = HikerState.waiting;
+            StartWait();
             while (endPos.Equals(Vector3.zero))
             {
-                endPos = currentSpaceSlot.Next.Value.PutHikerInPoint(this);
+                endPos = targetSlot.PutHikerInPoint(this);
                 yield return null;
             }
-            myState = HikerState.active;
+            EndWait();
         }
 
+        //Clear for future hikers.
         currentSpaceSlot.Value.ResetSpaceSlotFill(this);
 
+        //Movement.
         float t = 0f;
         while (t < 1f)
         {
@@ -119,13 +147,26 @@ public class Hiker : MonoBehaviour
             yield return null;
         }
 
-        currentSpaceSlot = currentSpaceSlot.Next;
+        currentSpaceSlot = targetSlot.myLink;
         MoveToCurrentTrailSlot(endPos);
 
-        if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.Last))
+
+        //Check if at last tile.
+        if (myDirection.Equals(HikerDirection.goingUp))
         {
-            FinishHike();
+            if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.Last))
+            {
+                FinishHike();
+            }
         }
+        else if (myDirection.Equals(HikerDirection.goingDown))
+        {
+            if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.First))
+            {
+                FinishHike();
+            }
+        }
+
         moving = false;
         yield break;
     }
@@ -133,6 +174,16 @@ public class Hiker : MonoBehaviour
     void MoveToCurrentTrailSlot(Vector3 pos)
     {
         transform.position = pos;
+    }
+
+    void StartWait()
+    {
+        myState = HikerState.waiting;
+    }
+
+    void EndWait()
+    {
+        myState = HikerState.active;
     }
 
 }

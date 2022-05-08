@@ -27,6 +27,15 @@ public class TrailGenerator : MonoBehaviour
     int trailDistance;
     int trailWidth;
     float _trailAltitudeModifier = .0002f;
+
+    [Header("Noise")]
+    public NoiseMethodType type;
+    public float frequency = 1f;
+    [Range(1, 8)] public int octaves = 1;
+
+    [Range(1f, 4f)] public float lacunarity = 2f;
+
+    [Range(0f, 1f)] public float persistence = 0.5f;
     public void Awake()
     {
         Services.TrailGenerator = this;
@@ -47,10 +56,14 @@ public class TrailGenerator : MonoBehaviour
 
     void Redo()
     {
-        foreach (SpaceSlot s in grid)
+
+        for (int i = 0; i < grid.GetLength(0); i++)
         {
-            Destroy(s.gameObject);
-            Destroy(s);
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                Destroy(grid[i, j].gameObject);
+                Destroy(grid[i, j]);
+            }
         }
         gridList.Clear();
         notTrailSpots.Clear();
@@ -152,40 +165,86 @@ public class TrailGenerator : MonoBehaviour
             firstTrailCount = trailCounter;
         }
 
-        BasicSpaceSlotSet();
-
+        NewSpaceSlotSet();
 
         Services.Player.SetPlayerPosOnTrailStart();
     }
-    public NoiseMethodType type;
-    public float frequency = 1f;
-    [Range(1, 8)]
-    public int octaves = 1;
 
-    [Range(1f, 4f)]
-    public float lacunarity = 2f;
-
-    [Range(0f, 1f)]
-    public float persistence = 0.5f;
     void NoiseSpaceSlotSet()
     {
         NoiseMethod method = Noise.methods[(int)type][2];
+        float starti = UnityEngine.Random.Range(0f, 100f);
+        float startj = UnityEngine.Random.Range(0f, 100f);
         //Noise to SpaceSlots
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
             {
-                float sample = Noise.Sum(method, new Vector3(i, j, 0), frequency, octaves, lacunarity, persistence).value;
+                float sample = Noise.Sum(method, new Vector3(i + starti, j + startj, 0), frequency, octaves, lacunarity, persistence).value;
                 sample = sample * 0.5f + 0.5f;
                 grid[i, j].SetNoiseVal(sample);
             }
         }
     }
 
+    //This one has noise in it
+    void NewSpaceSlotSet()
+    {
+        foreach (SpaceSlot s in notTrailSpots)
+        {
+
+            if (s.plantChance > 1) //a few points around the path
+            {
+                s.SetSlotToRock();
+                continue;
+            }
+            else //not around the path
+            {
+                if (s.noiseVal > .7f)
+                {
+                    s.SetSlotToRock();
+                    continue;
+                }
+                else if (s.noiseVal > .6f)
+                {
+                    s.SetSlotToPlant();
+                    continue;
+                }
+                else
+                {
+                    if (UnityEngine.Random.value < .1f)
+                    {
+                        s.SetSlotToPlant();
+                        continue;
+                    }
+                    else
+                    {
+                        s.SetSlotToTree();
+                        continue;
+                    }
+                }
+            }
+
+        }
+
+        foreach (SpaceSlot s in gridBorderList)
+        {
+            if (UnityEngine.Random.value < .5f)
+            {
+                s.SetSlotToTree();
+            }
+            else
+            {
+                s.SetSlotToPlant();
+            }
+
+        }
+    }
     void BasicSpaceSlotSet()
     {
         foreach (SpaceSlot s in notTrailSpots)
         {
+
             //Technique to cluster plants/rocks/trees?
             //Use perlin noise (like with shader) to have 0 be trees or 1 be plants or something
             //Ambient sound effects could benefit this: birds chirping, wind, etc.
@@ -196,7 +255,7 @@ public class TrailGenerator : MonoBehaviour
             }
             if (s.plantChance >= 1)
             {
-                s.SetSlotToPlant(UnityEngine.Random.Range(.4f, .9f), UnityEngine.Random.Range(0f, 360f));
+                s.SetSlotToPlant();
                 continue;
             }
             else
@@ -208,7 +267,7 @@ public class TrailGenerator : MonoBehaviour
                 }
 
             }
-            s.SetSlotToPlant(1f, UnityEngine.Random.Range(0f, 360f));
+            s.SetSlotToPlant();
 
         }
 
@@ -349,7 +408,6 @@ public class TrailGenerator : MonoBehaviour
                     if (UnityEngine.Random.value * .1f >= totalBend)
                         continue;
                 }
-                // dydx[i] = Differentiate(x[i]);
                 openSet.Add(n);
             }
 

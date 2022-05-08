@@ -983,6 +983,11 @@ MonoBehaviour:
   _bendyness: 0.097
   _bendySeparation: 0.29
   _spaceSlotPadding: 1
+  type: 0
+  frequency: 0.2
+  octaves: 5
+  lacunarity: 2.11
+  persistence: 0.582
 --- !u!114 &1232672183
 MonoBehaviour:
   m_ObjectHideFlags: 0

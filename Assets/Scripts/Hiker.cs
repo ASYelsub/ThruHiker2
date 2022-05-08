@@ -64,7 +64,7 @@ public class Hiker : MonoBehaviour
     {
         if (myDirection.Equals(HikerDirection.goingUp))
         {
-            while (!currentSpaceSlot.Next.Equals(null))
+            while (currentSpaceSlot.Next != null)
             {
                 if (!moving)
                 {
@@ -84,7 +84,7 @@ public class Hiker : MonoBehaviour
         }
         else if (myDirection.Equals(HikerDirection.goingDown))
         {
-            while (!currentSpaceSlot.Previous.Equals(null))
+            while (currentSpaceSlot.Previous != null)
             {
                 if (!moving)
                 {

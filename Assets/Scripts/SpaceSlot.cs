@@ -50,7 +50,7 @@ public class SpaceSlot : MonoBehaviour
     public void SetNoiseVal(float val)
     {
         noiseVal = val;
-        groundTransform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(noiseVal, noiseVal, noiseVal);
+        // groundTransform.gameObject.GetComponent<MeshRenderer>().material.color = new Color(noiseVal, noiseVal, noiseVal);
 
     }
     public void Init(float slope)
@@ -151,12 +151,13 @@ public class SpaceSlot : MonoBehaviour
         SetRockOff();
         SetTreeOn();
     }
-    public void SetSlotToPlant(float scale, float yRot)
+    public void SetSlotToPlant()
     {
         mySlotType = SlotTypes.Plants;
         SetRockOff();
         SetTreeOff();
-        SetPlantOn(new Vector3(scale, scale, scale), yRot);
+
+        SetPlantOn();
     }
     public void SetSlotToRock()
     {
@@ -182,11 +183,23 @@ public class SpaceSlot : MonoBehaviour
     {
         treeTransform.gameObject.SetActive(true);
         int treeOn = UnityEngine.Random.Range(0, treeObjs.Count);
+
+        float scale = UnityEngine.Random.value;
+        while (scale < .5f)
+        {
+            scale = UnityEngine.Random.value;
+        }
+
         for (int i = 0; i < treeObjs.Count; i++)
         {
             treeObjs[i].SetActive(false);
             if (i == treeOn)
+            {
                 treeObjs[i].SetActive(true);
+                treeObjs[i].transform.localScale = new Vector3(scale, scale, scale);
+                treeObjs[i].transform.eulerAngles += new Vector3(0, UnityEngine.Random.Range(0f, 360f), 0);
+            }
+
         }
     }
     private void SetTreeOff()
@@ -196,23 +209,37 @@ public class SpaceSlot : MonoBehaviour
     private void SetRockOn()
     {
         rockTransform.gameObject.SetActive(true);
+        float scale = UnityEngine.Random.value;
+        while (scale < .1f)
+        {
+            scale = UnityEngine.Random.value;
+        }
+        rockTransform.localScale = new Vector3(scale, scale, scale);
+        rockTransform.eulerAngles += new Vector3(UnityEngine.Random.Range(0f, 360f), UnityEngine.Random.Range(0f, 360f), UnityEngine.Random.Range(0f, 360f));
+        rockTransform.position -= new Vector3(0, .5f * (1f - scale), 0);
     }
     private void SetRockOff()
     {
         rockTransform.gameObject.SetActive(false);
     }
-    private void SetPlantOn(Vector3 scale, float yRot)
+    private void SetPlantOn()
     {
         plantTransform.gameObject.SetActive(true);
         int plantOn = UnityEngine.Random.Range(0, plantObjs.Count);
+        float scale = UnityEngine.Random.value;
+        while (scale < .1f)
+        {
+            scale = UnityEngine.Random.value;
+        }
+
         for (int i = 0; i < plantObjs.Count; i++)
         {
             plantObjs[i].SetActive(false);
             if (i == plantOn)
             {
                 plantObjs[i].SetActive(true);
-                plantObjs[i].transform.localScale = scale;
-                plantObjs[i].transform.eulerAngles += new Vector3(0, yRot, 0);
+                plantObjs[i].transform.localScale = new Vector3(scale, scale, scale);
+                plantObjs[i].transform.eulerAngles += new Vector3(0, UnityEngine.Random.Range(0f, 360f), 0);
             }
 
         }

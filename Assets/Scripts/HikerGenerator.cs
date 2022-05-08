@@ -62,7 +62,7 @@ public class HikerGenerator : MonoBehaviour
 
         for (int i = 0; i < hikersInLevel; i++)
         {
-            GameObject newHikerObject = Instantiate(hikerPrefab, Vector3.zero, Quaternion.identity);
+            GameObject newHikerObject = Instantiate(hikerPrefab, new Vector3(-100f, -100f, -100f), Quaternion.identity);
             Hiker newHiker = newHikerObject.GetComponent<Hiker>();
             queuedHikers.Enqueue(newHiker);
             newHiker.Init(GetRandomFirstName(), GetRandomLastName());

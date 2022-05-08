@@ -119,6 +119,7 @@ public class Map : MonoBehaviour
     public void ScrollMap()
     {
         float mouseY = -Input.GetAxis("Mouse Y");
+        float mouseX = -Input.GetAxis("Mouse X");
         if (mapCamera.transform.position.z >= Services.TrailGenerator.trail.Last.Value.transform.position.z)
         {
             if (mouseY > 0) { return; }
@@ -127,19 +128,16 @@ public class Map : MonoBehaviour
         {
             if (mouseY < 0) { return; }
         }
-        mapCamera.transform.position += new Vector3(0, 0, 1f) * mouseY;
 
-
-        float mouseX = -Input.GetAxis("Mouse X");
-        if (mapCamera.transform.localPosition.x >= 8f)
+        if (mapCamera.transform.localPosition.x >= 20f)
         {
             if (mouseX > 0) { return; }
         }
-        if (mapCamera.transform.localPosition.x <= -8f)
+        if (mapCamera.transform.localPosition.x <= 0f)
         {
             if (mouseX < 0) { return; }
         }
-        mapCamera.transform.localPosition += new Vector3(1f, 0, 0) * mouseX;
+        mapCamera.transform.position += new Vector3(1f * mouseX, 0, 1f * mouseY);
     }
 
 }

@@ -205,7 +205,7 @@ public class TrailGenerator : MonoBehaviour
                     s.SetSlotToRock();
                     continue;
                 }
-                else if (s.noiseVal > .6f)
+                else if (s.noiseVal > .55f)
                 {
                     s.SetSlotToPlant();
                     continue;

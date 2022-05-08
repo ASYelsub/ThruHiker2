@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.728}
+  m_AnchoredPosition: {x: 0, y: 0.391}
   m_SizeDelta: {x: 2, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &6602734757535799597
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -220,6 +220,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: e44594cd2de2a4d98913617c98ef09b8, type: 2}
   - {fileID: 2100000, guid: 16d0cd17dac4a4f1bb5d96a74d5eb2db, type: 2}
   - {fileID: 2100000, guid: 595a169c093944314a1946610d96b0d9, type: 2}
+  - {fileID: 2100000, guid: 49dc4273bebbf4366a8d0ba4b337139e, type: 2}
   hikerBody: {fileID: 4102341457159223791}
   firstNameTMP: {fileID: 6041673921977041415}
   lastNameTMP: {fileID: 2229384238242890256}
@@ -259,7 +260,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.564}
+  m_AnchoredPosition: {x: 0, y: 0.22700003}
   m_SizeDelta: {x: 2, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &8948602995058233998
@@ -357,7 +358,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0

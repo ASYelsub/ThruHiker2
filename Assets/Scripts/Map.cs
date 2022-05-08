@@ -49,6 +49,7 @@ public class Map : MonoBehaviour
 
     void EnableMap()
     {
+        Time.timeScale = 0f;
         mapCamera.gameObject.SetActive(true);
         gameObject.SetActive(true);
         mapEnabled = true;
@@ -57,6 +58,7 @@ public class Map : MonoBehaviour
 
     void DisableMap()
     {
+        Time.timeScale = 1f;
         mapCamera.gameObject.SetActive(false);
         gameObject.SetActive(false);
         mapEnabled = false;

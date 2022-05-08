@@ -702,8 +702,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 108.16998, y: -34.71}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 414.02786, y: -34.70999}
+  m_SizeDelta: {x: 811.7158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197237367
 MonoBehaviour:
@@ -725,7 +725,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Tab: Map'
+  m_text: 'Tab: Map
+
+    W/Space/Return: Move Forward'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -988,7 +990,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1828865353}
   - component: {fileID: 1828865352}
-  - component: {fileID: 1828865351}
   m_Layer: 0
   m_Name: MapCamera
   m_TagString: Untagged
@@ -996,14 +997,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!81 &1828865351
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828865350}
-  m_Enabled: 1
 --- !u!20 &1828865352
 Camera:
   m_ObjectHideFlags: 0

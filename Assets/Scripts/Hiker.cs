@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public enum HikerState { dorment, active, finished }
+public enum HikerState { dorment, active, waiting, finished }
 public enum HikerDirection { goingUp, goingDown }
 public class Hiker : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class Hiker : MonoBehaviour
             myDirection = HikerDirection.goingDown;
         }
         currentSpaceSlot = startSlot;
-        MoveToCurrentTrailSlot();
+        MoveToCurrentTrailSlot(currentSpaceSlot.Value.FirstPointInSpace);
         StartCoroutine(HikeRoutine());
     }
 
@@ -58,7 +58,7 @@ public class Hiker : MonoBehaviour
             {
                 if (!moving)
                 {
-                    yield return MoveUpSlot();
+                    yield return MoveUpSlotRoutine();
                     while (moving)
                     {
                         yield return null;
@@ -79,19 +79,48 @@ public class Hiker : MonoBehaviour
         myState = HikerState.finished;
     }
 
-    IEnumerator MoveUpSlot()
+    IEnumerator MoveUpSlotRoutine()
     {
         moving = true;
+
+        //Check that there is space to move into.
+        if (!currentSpaceSlot.Next.Value.HasSpace())
+        {
+            myState = HikerState.waiting;
+            while (!currentSpaceSlot.Next.Value.HasSpace())
+            {
+                yield return null;
+            }
+            myState = HikerState.active;
+        }
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = currentSpaceSlot.Next.Value.PutHikerInPoint(this);
+
+        //Check again.
+        if (endPos.Equals(Vector3.zero))
+        {
+            myState = HikerState.waiting;
+            while (endPos.Equals(Vector3.zero))
+            {
+                endPos = currentSpaceSlot.Next.Value.PutHikerInPoint(this);
+                yield return null;
+            }
+            myState = HikerState.active;
+        }
+
+        currentSpaceSlot.Value.ResetSpaceSlotFill(this);
 
         float t = 0f;
         while (t < 1f)
         {
-            transform.position = Vector3.Lerp(currentSpaceSlot.Value.SecondPointInSpace, currentSpaceSlot.Next.Value.SecondPointInSpace, t);
+            transform.position = Vector3.Lerp(startPos, endPos, t);
             t += Time.deltaTime / moveSeconds;
             yield return null;
         }
+
         currentSpaceSlot = currentSpaceSlot.Next;
-        MoveToCurrentTrailSlot();
+        MoveToCurrentTrailSlot(endPos);
 
         if (currentSpaceSlot.Equals(Services.TrailGenerator.trail.Last))
         {
@@ -101,9 +130,9 @@ public class Hiker : MonoBehaviour
         yield break;
     }
 
-    void MoveToCurrentTrailSlot()
+    void MoveToCurrentTrailSlot(Vector3 pos)
     {
-        transform.position = currentSpaceSlot.Value.SecondPointInSpace;
+        transform.position = pos;
     }
 
 }

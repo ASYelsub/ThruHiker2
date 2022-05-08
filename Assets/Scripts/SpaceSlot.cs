@@ -53,56 +53,23 @@ public class SpaceSlot : MonoBehaviour
         this.secondPointInSpace = firstPointInSpace + Vector3.right;
     }
 
-    public void SetSlotToTree()
-    {
-        mySlotType = SlotTypes.Tree;
-        SetPlantOff();
-        SetRockOff();
-        SetTreeOn();
-    }
-
-    public void SetSlotToPlant(float scale, float yRot)
-    {
-        mySlotType = SlotTypes.Plants;
-        SetRockOff();
-        SetTreeOff();
-        SetPlantOn(new Vector3(scale, scale, scale), yRot);
-    }
-
-    public void SetSlotToRock()
-    {
-        mySlotType = SlotTypes.Rock;
-        SetPlantOff();
-        SetTreeOff();
-        SetRockOn();
-    }
-
-    public void SetSlotToCull()
-    {
-        Destroy(this);
-    }
-    public void SetSlotToPath()
-    {
-        mySlotType = SlotTypes.Path;
-        groundTransform.gameObject.GetComponent<MeshRenderer>().material.color = Color.yellow;
-        SetPlantOff();
-        SetRockOff();
-        SetTreeOff();
-    }
-    public void PutHikerInPoint(Hiker hiker)
+    public Vector3 PutHikerInPoint(Hiker hiker)
     {
         if (!firstPointFilled)
         {
             this.hikerInFirstPoint = hiker;
             firstPointFilled = true;
-            return;
+            return firstPointInSpace;
         }
         else if (!secondPointFilled)
         {
+            Debug.Log('b');
             this.hikerInSecondPoint = hiker;
             secondPointFilled = true;
-            return;
+            return secondPointInSpace;
         }
+        Debug.Log('c');
+        return Vector3.zero;
     }
 
     public void ResetSpaceSlotFill(Hiker hiker)
@@ -110,14 +77,17 @@ public class SpaceSlot : MonoBehaviour
         if (hiker.Equals(hikerInFirstPoint))
         {
             firstPointFilled = false;
+            hikerInFirstPoint = null;
             return;
         }
-        else if (hiker.Equals(hikerInSecondPoint))
+        if (hiker.Equals(hikerInSecondPoint))
         {
             secondPointFilled = false;
+            hikerInSecondPoint = null;
             return;
         }
     }
+
     public bool HasSpace()
     {
         if (secondPointFilled && firstPointFilled)
@@ -168,6 +138,39 @@ public class SpaceSlot : MonoBehaviour
         set { secondPointFilled = value; }
     }
 
+    public void SetSlotToTree()
+    {
+        mySlotType = SlotTypes.Tree;
+        SetPlantOff();
+        SetRockOff();
+        SetTreeOn();
+    }
+    public void SetSlotToPlant(float scale, float yRot)
+    {
+        mySlotType = SlotTypes.Plants;
+        SetRockOff();
+        SetTreeOff();
+        SetPlantOn(new Vector3(scale, scale, scale), yRot);
+    }
+    public void SetSlotToRock()
+    {
+        mySlotType = SlotTypes.Rock;
+        SetPlantOff();
+        SetTreeOff();
+        SetRockOn();
+    }
+    public void SetSlotToCull()
+    {
+        Destroy(this);
+    }
+    public void SetSlotToPath()
+    {
+        mySlotType = SlotTypes.Path;
+        groundTransform.gameObject.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        SetPlantOff();
+        SetRockOff();
+        SetTreeOff();
+    }
 
     private void SetTreeOn()
     {

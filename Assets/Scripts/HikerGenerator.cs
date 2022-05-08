@@ -90,6 +90,7 @@ public class HikerGenerator : MonoBehaviour
     {
         StartCoroutine(HikerSpawnRoutine());
     }
+
     IEnumerator HikerSpawnRoutine()
     {
         while (queuedHikers.Count > 0)
